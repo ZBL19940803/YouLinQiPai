@@ -22,6 +22,7 @@ app.all('*', function(req, res, next) {
 });
 
 app.get('/get_server_info',function(req,res){
+	console.log('http-get_server_info-----------------');
 	var serverId = req.query.serverid;
 	var sign = req.query.sign;
 	console.log(serverId);
@@ -48,6 +49,7 @@ app.get('/get_server_info',function(req,res){
 });
 
 app.get('/create_room',function(req,res){
+	console.log('http-create_room-----------------');
 	var userId = parseInt(req.query.userid);
 	var sign = req.query.sign;
 	var gems = req.query.gems;
@@ -64,7 +66,7 @@ app.get('/create_room',function(req,res){
 		return;
 	}
 
-	conf = JSON.parse(conf);
+	conf = JSON.parse(conf);//转化为对象
 	roomMgr.createRoom(userId,conf,gems,serverIp,config.CLIENT_PORT,function(errcode,roomId){
 		if(errcode != 0 || roomId == null){
 			http.send(res,errcode,"create failed.");
@@ -77,6 +79,7 @@ app.get('/create_room',function(req,res){
 });
 
 app.get('/enter_room',function(req,res){
+	console.log('http-enter_room-----------------');
 	var userId = parseInt(req.query.userid);
 	var name = req.query.name;
 	var roomId = req.query.roomid;
@@ -87,8 +90,8 @@ app.get('/enter_room',function(req,res){
 	}
 
 	var md5 = crypto.md5(userId + name + roomId + config.ROOM_PRI_KEY);
-	console.log(req.query);
-	console.log(md5);
+	// console.log(req.query);
+	// console.log(md5);
 	if(md5 != sign){
 		http.send(res,2,"sign check failed.");
 		return;
@@ -106,12 +109,13 @@ app.get('/enter_room',function(req,res){
 			return;		
 		}
 
-		var token = tokenMgr.createToken(userId,5000);
+		var token = tokenMgr.createToken(userId,5000);//给玩家加密
 		http.send(res,0,"ok",{token:token});
 	});
 });
 
 app.get('/is_room_runing',function(req,res){
+	console.log('http-is_room_runing-----------------');
 	var roomId = req.query.roomid;
 	var sign = req.query.sign;
 	if(roomId == null || sign == null){
@@ -162,9 +166,9 @@ function update(){
 }
 
 exports.start = function($config){
-	config = $config;
+	console.log('http-HTTP服务入口程序-----------------');
 
-	//
+	config = $config;
 	gameServerInfo = {
 		id:config.SERVER_ID,
 		clientip:config.CLIENT_IP,

@@ -12,6 +12,7 @@ var app = express();
 
 //设置跨域访问
 app.all('*', function(req, res, next) {
+	console.log('socket-设置跨域访问-----------------');
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
@@ -22,15 +23,17 @@ app.all('*', function(req, res, next) {
 
 var config = null;
 
-exports.start = function(conf,mgr){
+exports.start = function(conf,mgr){//当启动服务器时，就会在app.js开启外网SOCKET服务，调用start函数
+	console.log('socket-SOCKET服务入口程序-----------------');
 	config = conf;
-	
 	var httpServer = require('http').createServer(app);
 	io = require('socket.io')(httpServer);
 	httpServer.listen(config.CLIENT_PORT);
 	
 	io.sockets.on('connection',function(socket){
+		console.log('socket-connection-----------------');
 		socket.on('login',function(data){
+			console.log('socket-login-----------------');
 			data = JSON.parse(data);
 			if(socket.userId != null){
 				//已经登陆过的就忽略
@@ -41,10 +44,10 @@ exports.start = function(conf,mgr){
 			var time = data.time;
 			var sign = data.sign;
 
-			console.log(roomId);
-			console.log(token);
-			console.log(time);
-			console.log(sign);
+			// console.log(roomId);
+			// console.log(token);
+			// console.log(time);
+			// console.log(sign);
 
 			
 			//检查参数合法性
@@ -76,11 +79,11 @@ exports.start = function(conf,mgr){
 			userMgr.bind(userId,socket);
 			socket.userId = userId;
 
-			//返回房间信息
+			//返回房间数据信息
 			var roomInfo = roomMgr.getRoom(roomId);
 			
 			var seatIndex = roomMgr.getUserSeat(userId);
-			roomInfo.seats[seatIndex].ip = socket.handshake.address;
+			roomInfo.seats[seatIndex].ip = socket.handshake.address;//添加玩家ip并赋值
 
 			var userData = null;
 			var seats = [];
@@ -106,7 +109,7 @@ exports.start = function(conf,mgr){
 				}
 			}
 
-			//通知前端
+			//通知前端并发送已经进入玩家的所有数据
 			var ret = {
 				errcode:0,
 				errmsg:"ok",
@@ -119,7 +122,7 @@ exports.start = function(conf,mgr){
 			};
 			socket.emit('login_result',ret);
 
-			//通知其它客户端
+			//新进入玩家的数据通知并发送其它客户端
 			userMgr.broacastInRoom('new_user_comes_push',userData,userId);
 			
 			socket.gameMgr = roomInfo.gameMgr;
@@ -141,6 +144,7 @@ exports.start = function(conf,mgr){
 		});
 
 		socket.on('ready',function(data){
+			console.log('socket-ready-----------------');
 			var userId = socket.userId;
 			if(userId == null){
 				return;
@@ -151,6 +155,7 @@ exports.start = function(conf,mgr){
 
 		//换牌
 		socket.on('huanpai',function(data){
+			console.log('socket-huanpai-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -174,6 +179,7 @@ exports.start = function(conf,mgr){
 
 		//定缺
 		socket.on('dingque',function(data){
+			console.log('socket-dingque-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -183,6 +189,7 @@ exports.start = function(conf,mgr){
 
 		//出牌
 		socket.on('chupai',function(data){
+			console.log('socket-chupai-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -192,6 +199,7 @@ exports.start = function(conf,mgr){
 		
 		//碰
 		socket.on('peng',function(data){
+			console.log('socket-peng-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -200,6 +208,7 @@ exports.start = function(conf,mgr){
 		
 		//杠
 		socket.on('gang',function(data){
+			console.log('socket-gang-----------------');
 			if(socket.userId == null || data == null){
 				return;
 			}
@@ -219,6 +228,7 @@ exports.start = function(conf,mgr){
 		
 		//胡
 		socket.on('hu',function(data){
+			console.log('socket-hu-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -227,6 +237,7 @@ exports.start = function(conf,mgr){
 
 		//过  遇上胡，碰，杠的时候，可以选择过
 		socket.on('guo',function(data){
+			console.log('socket-guo-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -235,6 +246,7 @@ exports.start = function(conf,mgr){
 		
 		//聊天
 		socket.on('chat',function(data){
+			console.log('socket-chat-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -244,6 +256,7 @@ exports.start = function(conf,mgr){
 		
 		//快速聊天
 		socket.on('quick_chat',function(data){
+			console.log('socket-quick_chat-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -253,6 +266,7 @@ exports.start = function(conf,mgr){
 		
 		//语音聊天
 		socket.on('voice_msg',function(data){
+			console.log('socket-voice_msg-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -262,6 +276,7 @@ exports.start = function(conf,mgr){
 		
 		//表情
 		socket.on('emoji',function(data){
+			console.log('socket-emoji-----------------');
 			if(socket.userId == null){
 				return;
 			}
@@ -271,8 +286,9 @@ exports.start = function(conf,mgr){
 		
 		//语音使用SDK不出现在这里
 		
-		//退出房间
+		//用户点击返回大厅
 		socket.on('exit',function(data){
+			console.log('socket-exit-----------------');
 			var userId = socket.userId;
 			if(userId == null){
 				return;
@@ -303,8 +319,9 @@ exports.start = function(conf,mgr){
 			socket.disconnect();
 		});
 		
-		//解散房间
+		//点击解散房间
 		socket.on('dispress',function(data){
+			console.log('socket-dispress-----------------');
 			var userId = socket.userId;
 			if(userId == null){
 				return;
@@ -333,6 +350,7 @@ exports.start = function(conf,mgr){
 
 		//解散房间
 		socket.on('dissolve_request',function(data){
+			console.log('socket-dissolve_request-----------------');
 			var userId = socket.userId;
 			console.log(1);
 			if(userId == null){
@@ -367,6 +385,7 @@ exports.start = function(conf,mgr){
 		});
 
 		socket.on('dissolve_agree',function(data){
+			console.log('socket-dissolve_agree-----------------');
 			var userId = socket.userId;
 
 			if(userId == null){
@@ -403,8 +422,8 @@ exports.start = function(conf,mgr){
 		});
 
 		socket.on('dissolve_reject',function(data){
+			console.log('socket-dissolve_reject-----------------');
 			var userId = socket.userId;
-
 			if(userId == null){
 				return;
 			}
@@ -422,6 +441,7 @@ exports.start = function(conf,mgr){
 
 		//断开链接
 		socket.on('disconnect',function(data){
+			console.log('socket-disconnect-----------------');
 			var userId = socket.userId;
 			if(!userId){
 				return;
@@ -445,7 +465,7 @@ exports.start = function(conf,mgr){
 			socket.userId = null;
 		});
 		
-		socket.on('game_ping',function(data){
+		socket.on('game_ping',function(data){//socket心跳包
 			var userId = socket.userId;
 			if(!userId){
 				return;
@@ -455,5 +475,5 @@ exports.start = function(conf,mgr){
 		});
 	});
 
-	console.log("game server is listening on " + config.CLIENT_PORT);	
+	console.log("socket-game server is listening on " + config.CLIENT_PORT);	
 };
