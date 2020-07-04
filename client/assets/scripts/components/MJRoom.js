@@ -1,3 +1,4 @@
+//玩家进入房间后等待别人点击准备进入房间
 cc.Class({
     extends: cc.Component,
 

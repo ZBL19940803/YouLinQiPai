@@ -1,3 +1,5 @@
+//场景四 createrole场景 创建角色
+
 cc.Class({
     extends: cc.Component,
 
@@ -57,6 +59,7 @@ cc.Class({
         this.onRandomBtnClicked();
     },
 
+    //确认按钮按下之后 
     onBtnConfirmClicked:function(){
         var name = this.inputName.string;
         if(name == ""){
@@ -64,7 +67,7 @@ cc.Class({
             return;
         }
         console.log(name);
-        cc.vv.userMgr.create(name);
+        cc.vv.userMgr.create(name);         //用户模块创建角色
     }
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

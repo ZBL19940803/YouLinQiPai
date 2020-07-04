@@ -1,3 +1,5 @@
+//场景五 大厅场景 大厅包括一些子界面模块 设置、创房等
+
 var Net = require("Net")
 var Global = require("Global")
 cc.Class({

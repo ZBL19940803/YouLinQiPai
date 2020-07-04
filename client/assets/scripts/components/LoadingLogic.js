@@ -1,3 +1,5 @@
+//场景二 loading场景 加载所有资源贴图
+
 cc.Class({
     extends: cc.Component,
 
@@ -34,7 +36,7 @@ cc.Class({
         self.onLoadComplete();      
     },
     
-    onLoadComplete:function(){
+    onLoadComplete:function(){//进入登录场景
         this._isLoading = false;
         this._stateStr = "准备登陆";
         cc.director.loadScene("login");

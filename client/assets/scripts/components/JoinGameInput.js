@@ -1,3 +1,5 @@
+//
+
 cc.Class({
     extends: cc.Component,
 
@@ -27,8 +29,9 @@ cc.Class({
         this.onResetClicked();
     },
     
+    //所有输入结束调用
     onInputFinished:function(roomId){
-        cc.vv.userMgr.enterRoom(roomId,function(ret){
+        cc.vv.userMgr.enterRoom(roomId,function(ret){       //通过userMgr模块触发enterRoom接口
             if(ret.errcode == 0){
                 this.node.active = false;
             }
@@ -57,6 +60,7 @@ cc.Class({
         }
     },
     
+    //每一个按钮一个方法 每次点击一次接收一次数据
     onN0Clicked:function(){
         this.onInput(0);  
     },

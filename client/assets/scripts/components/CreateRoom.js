@@ -1,3 +1,5 @@
+//创建房间模块 获取所有玩法选择并通过http模块发送给服务器
+
 cc.Class({
     extends: cc.Component,
 
@@ -19,7 +21,7 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
-        this._gamelist = this.node.getChildByName('game_list');
+        this._gamelist = this.node.getChildByName('game_list');//脚本通过查找的方式获取节点
 
         this._leixingxuanze = [];
         var t = this.node.getChildByName("leixingxuanze");

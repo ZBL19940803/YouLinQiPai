@@ -1,3 +1,6 @@
+//场景三 login场景 登录
+
+//处理服务器发过来的 自己定义的一些格式
 String.prototype.format = function(args) { 
     if (arguments.length>0) { 
         var result = this; 
@@ -46,9 +49,9 @@ cc.Class({
     onLoad: function () {
         cc.vv.utils.setFitSreenMode();
         cc.vv.http.url = cc.vv.http.master_url;
-        cc.vv.net.addHandler('push_need_create_role',function(){
+        cc.vv.net.addHandler('push_need_create_role',function(){        //新用户进入 服务器返回该消息 要客户端创建一个角色
             console.log("onLoad:push_need_create_role");
-            cc.director.loadScene("createrole");
+            cc.director.loadScene("createrole");                        //进入下一个场景
         });
         
         cc.vv.audioMgr.playBGM("bgMain.mp3");
@@ -66,7 +69,7 @@ cc.Class({
     },
     
     start:function(){
-        var account =  cc.sys.localStorage.getItem("wx_account");
+        var account =  cc.sys.localStorage.getItem("wx_account");//localstorage 本地登录信息存储
         var sign = cc.sys.localStorage.getItem("wx_sign");
         if(account != null && sign != null && account != '' && sign != ''){
             var ret = {
@@ -78,10 +81,12 @@ cc.Class({
         }   
     },
     
+    //新用户需要先点击登录按钮 游客登录
     onBtnQuickStartClicked:function(){
         cc.vv.userMgr.guestAuth();
     },
     
+    //原生平台接微信客户端会换成微信登录
     onBtnWeichatClicked:function(){
         var self = this;
         cc.vv.anysdkMgr.login();

@@ -1,3 +1,4 @@
+//场景一 start场景
 function urlParse(){
     var params = {};
     if(window.location == null){
@@ -20,35 +21,36 @@ function urlParse(){
     return params;
 }
 
+//静态 创建实例不需要绑定到节点也可以使用
 function initMgr(){
     cc.vv = {};
-    var UserMgr = require("UserMgr");
+    var UserMgr = require("UserMgr");           //用户管理
     cc.vv.userMgr = new UserMgr();
     
-    var ReplayMgr = require("ReplayMgr");
+    var ReplayMgr = require("ReplayMgr");       //回放管理
     cc.vv.replayMgr = new ReplayMgr();
+        
+    cc.vv.http = require("HTTP");               //请求封装
+    cc.vv.global = require("Global");           //全局变量缓存
+    cc.vv.net = require("Net");                 //连接管理 消息封装
     
-    cc.vv.http = require("HTTP");
-    cc.vv.global = require("Global");
-    cc.vv.net = require("Net");
-    
-    var GameNetMgr = require("GameNetMgr");
+    var GameNetMgr = require("GameNetMgr");     //服务器消息中转派发，已知桌面麻将信息储存(包括自家所有牌和其他家打在桌面上的牌)
     cc.vv.gameNetMgr = new GameNetMgr();
     cc.vv.gameNetMgr.initHandlers();
     
-    var AnysdkMgr = require("AnysdkMgr");
+    var AnysdkMgr = require("AnysdkMgr");       //AnySDK 原生接口调用管理管理
     cc.vv.anysdkMgr = new AnysdkMgr();
     cc.vv.anysdkMgr.init();
     
-    var VoiceMgr = require("VoiceMgr");
+    var VoiceMgr = require("VoiceMgr");         //语音聊天模块
     cc.vv.voiceMgr = new VoiceMgr();
     cc.vv.voiceMgr.init();
     
-    var AudioMgr = require("AudioMgr");
+    var AudioMgr = require("AudioMgr");         //音频管理
     cc.vv.audioMgr = new AudioMgr();
     cc.vv.audioMgr.init();
     
-    var Utils = require("Utils");
+    var Utils = require("Utils");           //为任意节点添加点击、滑动、退出时间绑定
     cc.vv.utils = new Utils();
     
     //var MJUtil = require("MJUtil");
@@ -81,7 +83,7 @@ cc.Class({
         loadingProgess:cc.Label,
     },
 
-    // use this for initialization
+    //组件脚本的初始化
     onLoad: function () {
         initMgr();
         cc.vv.utils.setFitSreenMode();

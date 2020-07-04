@@ -2,7 +2,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {        
-        gameRoot:{
+        gameRoot:{          //所有牌局信息game节点
             default:null,
             type:cc.Node
         },
@@ -24,7 +24,8 @@ cc.Class({
         _opts:[],
     },
     
-    onLoad: function () {
+    onLoad: function () {                   //将所有子模块添加到节点上
+        
         cc.vv.utils.setFitSreenMode();
         this.addComponent("NoticeTip");
         this.addComponent("GameOver");

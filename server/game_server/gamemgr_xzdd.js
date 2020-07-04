@@ -59,6 +59,8 @@ function shuffle(game) {
     return;
     */
 
+    
+    
     //筒 (0 ~ 8 表示筒子
     var index = 0;
     for(var i = 0; i < 9; ++i){
@@ -85,6 +87,7 @@ function shuffle(game) {
         }
     }
 
+    // 进行洗牌
     for(var i = 0; i < mahjongs.length; ++i){
         var lastIndex = mahjongs.length - 1 - i;
         var index = Math.floor(Math.random() * lastIndex);
@@ -92,6 +95,61 @@ function shuffle(game) {
         mahjongs[index] = mahjongs[lastIndex];
         mahjongs[lastIndex] = t;
     }
+    
+
+    if(true)
+    {//测试牌
+        for(var i = 0; i < 27; ++i){
+            for(var c = 0; c < 4; ++c){
+                mahjongs[index] = i;
+                index++;
+            }
+        }
+        mahjongs[0] = 0;
+        mahjongs[4] = 0;
+        mahjongs[8] = 0;
+        mahjongs[12] = 1;
+        mahjongs[16] = 2;
+        mahjongs[20] = 3;
+        mahjongs[24] = 4;
+        mahjongs[28] = 5;
+        mahjongs[32] = 6;
+        mahjongs[36] = 7;
+        mahjongs[40] = 8;
+        mahjongs[44] = 8;
+        mahjongs[48] = 8;
+        mahjongs[52] = 0;
+
+        mahjongs[1] = 9;
+        mahjongs[5] = 9;
+        mahjongs[9] = 9;
+        mahjongs[13] = 10;
+        mahjongs[17] = 11;
+        mahjongs[21] = 12;
+        mahjongs[25] = 13;
+        mahjongs[29] = 14;
+        mahjongs[33] = 15;
+        mahjongs[37] = 16;
+        mahjongs[41] = 17;
+        mahjongs[45] = 17;
+        mahjongs[49] = 17;
+
+        mahjongs[2] = 9;
+        mahjongs[6] = 9;
+        mahjongs[10] = 9;
+        mahjongs[14] = 10;
+        mahjongs[18] = 11;
+        mahjongs[22] = 12;
+        mahjongs[26] = 13;
+        mahjongs[30] = 14;
+        mahjongs[34] = 15;
+        mahjongs[38] = 16;
+        mahjongs[42] = 17;
+        mahjongs[46] = 17;
+        mahjongs[50] = 17;
+    }
+
+    
 }
 
 function mopai(game,seatIndex) {
@@ -1054,7 +1112,7 @@ exports.setReady = function(userId,callback){
         return;
     }
 
-    roomMgr.setReady(userId,true);
+    roomMgr.setReady(userId,true);//设置玩家准备状态等于true
 
     var game = games[roomId];
     if(game == null){
@@ -1172,6 +1230,7 @@ function store_game(game,callback){
 
 //开始新的一局
 exports.begin = function(roomId) {
+    console.log('xxdd-开局',roomId);
     var roomInfo = roomMgr.getRoom(roomId);
     if(roomInfo == null){
         return;
