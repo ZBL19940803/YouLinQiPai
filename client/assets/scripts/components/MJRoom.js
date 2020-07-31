@@ -208,6 +208,9 @@ cc.Class({
         if(cc.vv.gameNetMgr.conf.type == "xlch"){
             var title = "<血流成河>";
         }
+        else if(cc.vv.gameNetMgr.conf.type == "hzmj"){
+            var title = "<红中麻将>";
+        }
         cc.vv.anysdkMgr.share("天天麻将" + title,"房号:" + cc.vv.gameNetMgr.roomId + " 玩法:" + cc.vv.gameNetMgr.getWanfa());
     },
     

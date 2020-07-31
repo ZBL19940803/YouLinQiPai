@@ -38,7 +38,7 @@ cc.Class({
     },
 
     onBtnOK: function () {
-        var usedTypes = ['xzdd', 'xlch'];
+        var usedTypes = ['xzdd', 'xlch', 'hzmj'];
         var type = this.getType();
         if (usedTypes.indexOf(type) == -1) {
             return;
@@ -61,6 +61,9 @@ cc.Class({
         }
         else if (type == 1) {
             return 'xlch';
+        }
+        else if (type == 2) {
+            return 'hzmj';
         }
         return 'xzdd';
     },
@@ -110,6 +113,9 @@ cc.Class({
             conf = this.constructSCMJConf();
         }
         else if (type == 'xlch') {
+            conf = this.constructSCMJConf();
+        }
+        else if (type == 'hzmj') {
             conf = this.constructSCMJConf();
         }
         conf.type = type;

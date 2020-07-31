@@ -31,6 +31,9 @@ cc.Class({
         if(cc.vv.gameNetMgr.conf.type == "xzdd"){
             this._gameover = this.node.getChildByName("game_over");
         }
+        else if(cc.vv.gameNetMgr.conf.type == "hzmj"){
+            this._gameover = this.node.getChildByName("game_over_hzmj");
+        }
         else{
             this._gameover = this.node.getChildByName("game_over_xlch");
         }
@@ -79,6 +82,9 @@ cc.Class({
         if(cc.vv.gameNetMgr.conf.type == "xzdd"){
             this.onGameOver_XZDD(data);
         }
+        else if(cc.vv.gameNetMgr.conf.type == "hzmj"){
+            this.onGameOver_HZMJ(data);
+        }
         else{
             this.onGameOver_XLCH(data);
         }
@@ -106,6 +112,236 @@ cc.Class({
             this._pingju.active = true;
         }
         
+            
+        //显示玩家信息
+        for(var i = 0; i < 4; ++i){
+            var seatView = this._seats[i];
+            var userData = data[i];
+            var hued = false;
+            //胡牌的玩家才显示 是否清一色 根xn的字样
+            var numOfGangs = userData.angangs.length + userData.wangangs.length + userData.diangangs.length;
+            var numOfGen = userData.numofgen;
+            var actionArr = [];
+            var is7pairs = false;
+            var ischadajiao = false;
+            for(var j = 0; j < userData.actions.length; ++j){
+                var ac = userData.actions[j];
+                if(ac.type == "zimo" || ac.type == "ganghua" || ac.type == "dianganghua" || ac.type == "hu" || ac.type == "gangpaohu" || ac.type == "qiangganghu" || ac.type == "chadajiao"){
+                    if(userData.pattern == "7pairs"){
+                        actionArr.push("七对");
+                    }
+                    else if(userData.pattern == "l7pairs"){
+                        actionArr.push("龙七对");
+                    }
+                    else if(userData.pattern == "j7pairs"){
+                        actionArr.push("将七对");
+                    }
+                    else if(userData.pattern == "duidui"){
+                        actionArr.push("碰碰胡");
+                    }
+                    else if(userData.pattern == "jiangdui"){
+                        actionArr.push("将对");
+                    }
+                    
+                    if(ac.type == "zimo"){
+                        actionArr.push("自摸");
+                    }
+                    else if(ac.type == "ganghua"){
+                        actionArr.push("杠上花");
+                    }
+                    else if(ac.type == "dianganghua"){
+                        actionArr.push("点杠花");
+                    }
+                    else if(ac.type == "gangpaohu"){
+                        actionArr.push("杠炮胡");
+                    }
+                    else if(ac.type == "qiangganghu"){
+                        actionArr.push("抢杠胡");
+                    }
+                    else if(ac.type == "chadajiao"){
+                        ischadajiao = true;
+                    }
+                    hued = true;
+                }
+                else if(ac.type == "fangpao"){
+                    actionArr.push("放炮");
+                }
+                else if(ac.type == "angang"){
+                    actionArr.push("暗杠");
+                }
+                else if(ac.type == "diangang"){
+                    actionArr.push("明杠");
+                }
+                else if(ac.type == "wangang"){
+                    actionArr.push("弯杠");
+                }
+                else if(ac.type == "fanggang"){
+                   actionArr.push("放杠");
+                }
+                else if(ac.type == "zhuanshougang"){
+                    actionArr.push("转手杠");
+                }
+                else if(ac.type == "beiqianggang"){
+                    actionArr.push("被抢杠");
+                }
+                else if(ac.type == "beichadajiao"){
+                    actionArr.push("被查叫");
+                }
+            }
+            
+            if(hued){
+                if(userData.qingyise){
+                    actionArr.push("清一色");
+                }
+                
+                if(userData.menqing){
+                    actionArr.push("门清");
+                }
+                
+                if(userData.zhongzhang){
+                    actionArr.push("中张");
+                }
+                
+                if(userData.jingouhu){
+                    actionArr.push("金钩胡");
+                }
+                                
+                if(userData.haidihu){
+                    actionArr.push("海底胡");
+                }
+                
+                if(userData.tianhu){
+                    actionArr.push("天胡");
+                }
+                
+                if(userData.dihu){
+                    actionArr.push("地胡");
+                }
+            
+                if(numOfGen > 0){
+                    actionArr.push("根x" + numOfGen); 
+                }                
+                
+                if(ischadajiao){
+                    actionArr.push("查大叫");
+                }
+            }
+            
+            for(var o = 0; o < 3;++o){
+                seatView.hu.children[o].active = false;    
+            }
+            if(userData.huorder >= 0){
+                seatView.hu.children[userData.huorder].active = true;    
+            }
+
+            seatView.username.string = cc.vv.gameNetMgr.seats[i].name;
+            seatView.zhuang.active = cc.vv.gameNetMgr.button == i;
+            seatView.reason.string = actionArr.join("、");
+            
+            //胡牌的玩家才有番
+            var fan = 0;
+            if(hued){
+                fan = userData.fan;
+            }
+            seatView.fan.string = fan + "番";
+            
+            //
+            if(userData.score > 0){
+                seatView.score.string = "+" + userData.score;    
+            }
+            else{
+                seatView.score.string = userData.score;
+            }
+           
+            
+            var hupai = -1;
+            if(hued){
+                hupai = userData.holds.pop();
+            }
+            
+            cc.vv.mahjongmgr.sortMJ(userData.holds,userData.dingque);
+            
+            //胡牌不参与排序
+            if(hued){
+                userData.holds.push(hupai);
+            }
+            
+            //隐藏所有牌
+            for(var k = 0; k < seatView.mahjongs.childrenCount; ++k){
+                var n = seatView.mahjongs.children[k];
+                n.active = false;
+            }
+           
+            var lackingNum = (userData.pengs.length + numOfGangs)*3; 
+            //显示相关的牌
+            for(var k = 0; k < userData.holds.length; ++k){
+                var pai = userData.holds[k];
+                var n = seatView.mahjongs.children[k + lackingNum];
+                n.active = true;
+                var sprite = n.getComponent(cc.Sprite);
+                sprite.spriteFrame = cc.vv.mahjongmgr.getSpriteFrameByMJID("M_",pai);
+            }
+            
+            
+            for(var k = 0; k < seatView._pengandgang.length; ++k){
+                seatView._pengandgang[k].active = false;
+            }
+            
+            //初始化杠牌
+            var index = 0;
+            var gangs = userData.angangs;
+            for(var k = 0; k < gangs.length; ++k){
+                var mjid = gangs[k];
+                this.initPengAndGangs(seatView,index,mjid,"angang");
+                index++;    
+            }
+            
+            var gangs = userData.diangangs;
+            for(var k = 0; k < gangs.length; ++k){
+                var mjid = gangs[k];
+                this.initPengAndGangs(seatView,index,mjid,"diangang");
+                index++;    
+            }
+            
+            var gangs = userData.wangangs;
+            for(var k = 0; k < gangs.length; ++k){
+                var mjid = gangs[k];
+                this.initPengAndGangs(seatView,index,mjid,"wangang");
+                index++;    
+            }
+            
+            //初始化碰牌
+            var pengs = userData.pengs
+            if(pengs){
+                for(var k = 0; k < pengs.length; ++k){
+                    var mjid = pengs[k];
+                    this.initPengAndGangs(seatView,index,mjid,"peng");
+                    index++;    
+                }    
+            }
+        }
+    },
+    onGameOver_HZMJ(data){
+        console.log(data);
+        if(data.length == 0){
+            this._gameresult.active = true;
+            return;
+        }
+        this._gameover.active = true;
+        this._pingju.active = false;
+        this._win.active = false;
+        this._lose.active = false;
+
+        var myscore = data[cc.vv.gameNetMgr.seatIndex].score;
+        if(myscore > 0){
+            this._win.active = true;
+        }         
+        else if(myscore < 0){
+            this._lose.active = true;
+        }
+        else{
+            this._pingju.active = true;
+        }
             
         //显示玩家信息
         for(var i = 0; i < 4; ++i){
