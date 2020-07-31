@@ -113,6 +113,7 @@ app.get('/create_user',function(req,res){
 });
 
 app.get('/create_private_room',function(req,res){
+	console.log('create_private_room-----------------');
 	//验证参数合法性
 	var data = req.query;
 	//验证玩家身份
@@ -140,8 +141,11 @@ app.get('/create_private_room',function(req,res){
 			}
 			//创建房间
 			room_service.createRoom(account,userId,conf,function(err,roomId){
+				console.log('room_service.createRoom-----------------');
 				if(err == 0 && roomId != null){
+					console.log('err == 0 && roomId != null----------------');
 					room_service.enterRoom(userId,name,roomId,function(errcode,enterInfo){
+						console.log('room_service.enterRoom----------------');
 						if(enterInfo){
 							var ret = {
 								roomid:roomId,
@@ -167,6 +171,7 @@ app.get('/create_private_room',function(req,res){
 });
 
 app.get('/enter_private_room',function(req,res){
+	console.log('enter_private_room-----------------');
 	var data = req.query;
 	var roomId = data.roomid;
 	if(roomId == null){

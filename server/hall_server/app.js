@@ -7,5 +7,6 @@ var config = configs.hall_server();
 var db = require('../utils/db');
 db.init(configs.mysql());
 
+console.log(config);
 client_service.start(config);
 room_service.start(config);

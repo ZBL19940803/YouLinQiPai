@@ -89,6 +89,7 @@ function chooseServer(){
 }
 
 exports.createRoom = function(account,userId,roomConf,fnCallback){
+	console.log('exports.createRoom-----------------');
 	var serverinfo = chooseServer();
 	if(serverinfo == null){
 		fnCallback(101,null);
@@ -105,7 +106,7 @@ exports.createRoom = function(account,userId,roomConf,fnCallback){
 			};
 			reqdata.sign = crypto.md5(userId + roomConf + data.gems + config.ROOM_PRI_KEY);
 			http.get(serverinfo.ip,serverinfo.httpPort,"/create_room",reqdata,function(ret,data){
-				//console.log(data);
+				console.log(data);
 				if(ret){
 					if(data.errcode == 0){
 						fnCallback(0,data.roomid);

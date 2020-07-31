@@ -123,7 +123,7 @@ cc.Class({
             type:baseInfo.type,
         }
         if(this.conf.type == null){
-            this.conf.type == "xzdd";
+            this.conf.type = "xzdd";
         }
     },
     
