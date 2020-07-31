@@ -34,6 +34,9 @@ function constructRoomFromDb(dbdata){
 	if(roomInfo.conf.type == "xlch"){
 		roomInfo.gameMgr = require("./gamemgr_xlch");
 	}
+	else if(roomInfo.conf.type == "hzmj"){
+		roomInfo.gameMgr = require("./gamemgr_hzmj");
+	}
 	else{
 		roomInfo.gameMgr = require("./gamemgr_xzdd");
 	}
@@ -109,7 +112,7 @@ exports.createRoom = function(creator,roomConf,gems,ip,port,callback){
 
 	var fnCreate = function(){
 		var roomId = generateRoomId();//生成房号
-		if(rooms[roomId] != null || creatingRooms[roomId] != null){//当房间存在时
+		if(rooms[roomId] != null || creatingRooms[roomId] != null){//当房号刚好存在时，重新生成房号
 			fnCreate();
 		}
 		else{
@@ -147,6 +150,9 @@ exports.createRoom = function(creator,roomConf,gems,ip,port,callback){
 					
 					if(roomConf.type == "xlch"){
 						roomInfo.gameMgr = require("./gamemgr_xlch");
+					}
+					else if(roomConf.type == "hzmj"){
+						roomInfo.gameMgr = require("./gamemgr_hzmj");
 					}
 					else{
 						roomInfo.gameMgr = require("./gamemgr_xzdd");
